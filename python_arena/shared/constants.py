@@ -1,0 +1,123 @@
+"""Shared constants for Python Arena.
+
+This module intentionally has no imports. All gameplay, display, and protocol
+magic values live here so the client and server share one source of truth.
+"""
+
+# Grid & display
+GRID_COLS = 30
+GRID_ROWS = 25
+CELL_SIZE = 24
+HUD_HEIGHT = 60
+WINDOW_W = GRID_COLS * CELL_SIZE
+WINDOW_H = GRID_ROWS * CELL_SIZE + HUD_HEIGHT
+
+# Gameplay
+INITIAL_HEALTH = 100
+MAX_HEALTH = 150
+GAME_DURATION = 180
+TICK_RATE = 10
+SNAKE_INIT_LEN = 3
+
+# Pie types {type_id: (label, health_delta, color)}
+PIE_TYPES = {
+    "regular": ("Pie", +10, (255, 200, 80)),
+    "golden": ("Golden", +25, (255, 215, 0)),
+    "poison": ("Poison", -15, (80, 200, 80)),
+    "shield": ("Shield", 0, (100, 180, 255)),
+}
+MAX_PIES = 5
+PIE_LIFETIME_SECONDS = 14
+PIE_LIFETIME_TICKS = PIE_LIFETIME_SECONDS * TICK_RATE
+PIE_FLASH_TICKS = 20
+SHIELD_DURATION_SECONDS = 5
+SHIELD_DURATION_TICKS = SHIELD_DURATION_SECONDS * TICK_RATE
+DAMAGE_IMMUNITY_SECONDS = 1.5
+DAMAGE_IMMUNITY_TICKS = int(DAMAGE_IMMUNITY_SECONDS * TICK_RATE)
+DAMAGE_FLASH_TICKS = int(0.6 * TICK_RATE)
+RETRO_FLASH_PERIOD_TICKS = 2
+
+# Dynamic battlefield refresh
+MAX_DYNAMIC_OBSTACLES = 3
+DYNAMIC_OBSTACLE_SPAWN_SECONDS = 9
+DYNAMIC_OBSTACLE_SPAWN_TICKS = DYNAMIC_OBSTACLE_SPAWN_SECONDS * TICK_RATE
+DYNAMIC_OBSTACLE_LIFETIME_SECONDS = 12
+DYNAMIC_OBSTACLE_LIFETIME_TICKS = DYNAMIC_OBSTACLE_LIFETIME_SECONDS * TICK_RATE
+DYNAMIC_OBSTACLE_FLASH_TICKS = 20
+
+# Obstacle types {type_id: health_delta}
+OBSTACLE_TYPES = {
+    "rock": -10,
+    "spike": -20,
+}
+
+# Static obstacle layout.
+FIXED_OBSTACLES = [
+    (6, 5, "rock"),
+    (14, 5, "spike"),
+    (23, 5, "rock"),
+    (9, 12, "spike"),
+    (20, 12, "rock"),
+    (6, 19, "spike"),
+    (15, 19, "rock"),
+    (23, 19, "spike"),
+]
+NUM_OBSTACLES = len(FIXED_OBSTACLES)
+
+# Collision penalties
+WALL_HIT_DMG = 15
+SNAKE_HIT_DMG = 20
+OBSTACLE_HIT_DMG = None
+
+# Network framing
+HEADER_LEN = 8
+ENCODING = "utf-8"
+BUFFER_SIZE = 4096
+
+# Message types (client -> server)
+C_CONNECT = "C_CONNECT"
+C_MOVE = "C_MOVE"
+C_CHALLENGE = "C_CHALLENGE"
+C_CHALLENGE_RESP = "C_CHALLENGE_RESP"
+C_WATCH = "C_WATCH"
+C_CHAT = "C_CHAT"
+C_DISCONNECT = "C_DISCONNECT"
+
+# Message types (server -> client)
+S_CONNECT_ACK = "S_CONNECT_ACK"
+S_PLAYER_LIST = "S_PLAYER_LIST"
+S_CHALLENGE = "S_CHALLENGE"
+S_CHALLENGE_ACK = "S_CHALLENGE_ACK"
+S_GAME_START = "S_GAME_START"
+S_GAME_STATE = "S_GAME_STATE"
+S_GAME_END = "S_GAME_END"
+S_CHAT = "S_CHAT"
+S_ERROR = "S_ERROR"
+S_WATCH_ACK = "S_WATCH_ACK"
+S_PLAYER_JOINED = "S_PLAYER_JOINED"
+S_PLAYER_LEFT = "S_PLAYER_LEFT"
+
+# Directions
+DIR_UP = "UP"
+DIR_DOWN = "DOWN"
+DIR_LEFT = "LEFT"
+DIR_RIGHT = "RIGHT"
+OPPOSITE = {
+    DIR_UP: DIR_DOWN,
+    DIR_DOWN: DIR_UP,
+    DIR_LEFT: DIR_RIGHT,
+    DIR_RIGHT: DIR_LEFT,
+}
+
+# Colors (RGB)
+COLOR_BG = (20, 20, 20)
+COLOR_GRID = (35, 35, 35)
+COLOR_HUD = (10, 10, 10)
+COLOR_SNAKE_P1 = (50, 200, 50)
+COLOR_SNAKE_P2 = (50, 100, 220)
+COLOR_OBSTACLE = (130, 80, 40)
+COLOR_SPIKE = (200, 50, 50)
+COLOR_TEXT = (230, 230, 230)
+COLOR_HP_BAR_OK = (50, 200, 50)
+COLOR_HP_BAR_LOW = (220, 80, 50)
+COLOR_CHAT_BG = (0, 0, 0, 160)
