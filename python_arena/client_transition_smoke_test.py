@@ -3,9 +3,17 @@
 import queue
 
 from client.screens.lobby_screen import LobbyScreen
+from client.screens.game_screen import GameScreen
 from client.screens.username_screen import UsernameScreen
 from client.screens.waiting_screen import WaitingScreen
-from shared.constants import S_CHALLENGE_ACK, S_CONNECT_ACK, S_GAME_START, S_GAME_STATE, S_PLAYER_LIST
+from shared.constants import (
+    S_CHALLENGE_ACK,
+    S_CONNECT_ACK,
+    S_GAME_END,
+    S_GAME_START,
+    S_GAME_STATE,
+    S_PLAYER_LIST,
+)
 
 
 class FakeNet:
@@ -72,6 +80,24 @@ def main() -> None:
         "game",
         {"your_snake": "alice", "opponent": "bob", "state": state},
     )
+
+    net = FakeNet()
+    game = GameScreen(net)
+    ended_list = {
+        "type": S_PLAYER_LIST,
+        "players": ["alice", "bob"],
+        "game_in_progress": False,
+        "spectatable_usernames": [],
+    }
+    net.inbound_q.put({"type": S_GAME_END, "winner": "alice", "state": state})
+    net.inbound_q.put(ended_list)
+    action = game.update([])
+    assert action == (
+        "transition",
+        "result",
+        {"type": S_GAME_END, "winner": "alice", "state": state},
+    )
+    assert net.drain_messages() == [ended_list]
 
     print("Client transition smoke test passed.")
 

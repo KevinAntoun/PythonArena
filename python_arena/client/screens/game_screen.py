@@ -100,7 +100,8 @@ class GameScreen(BaseScreen):
         return None
 
     def _handle_messages(self):
-        for msg in self.net.drain_messages():
+        messages = self.net.drain_messages()
+        for idx, msg in enumerate(messages):
             msg_type = msg.get("type")
             if msg_type == S_GAME_START:
                 self.my_username = msg.get("your_snake", self.net.username)
@@ -111,6 +112,7 @@ class GameScreen(BaseScreen):
                 self.state = msg.get("state")
             elif msg_type == S_GAME_END:
                 self.state = msg.get("state", self.state)
+                self.net.defer_messages(messages[idx + 1 :])
                 return ("transition", "result", msg)
             elif msg_type == S_CHAT:
                 self._append_chat(msg.get("from", "?"), msg.get("message", ""))
